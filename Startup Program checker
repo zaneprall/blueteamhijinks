@@ -1,0 +1,101 @@
+@echo off 
+title Zane's Startup Program checker
+:start
+echo Outputting Startup folders and full contents
+echo Note: not all directories will output on all windows versions.
+echo "%systemdrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
+dir /A HS "%systemdrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
+
+echo "%systemdrive%\users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+dir /A HS "%systemdrive%\users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+
+echo "%systemDrive%\Documents and Settings\All Users\Start Menu\Programs\Startup"
+dir /A HS "%systemDrive%\Documents and Settings\All Users\Start Menu\Programs\Startup"
+
+echo "%SystemDrive%\wmiOWS\Start Menu\Programs\Startup"
+dir /A HS "%SystemDrive%\wmiOWS\Start Menu\Programs\Startup"
+
+echo "%SystemDrive%\WINNT\Profiles\All Users\Start Menu\Programs\Startup"
+dir /A HS "%SystemDrive%\WINNT\Profiles\All Users\Start Menu\Programs\Startup"
+
+:choose
+
+
+echo ==============
+echo Would you like to view all scheduled tasks as well?
+echo ==============
+echo - 
+echo 1) Yes	
+echo 2) No
+
+
+echo -
+set /p tk=Type option:
+if "%tk%"=="1" goto yes
+if "%tk%"=="2" goto no
+if "%tk%"=="no" goto no
+if "%tk%"=="yes" goto yes
+if "%tk%"=="y" goto yes
+if '%tk%"=="n" goto no
+echo Please Pick an option:
+goto choose
+
+
+:no
+goto print
+
+:yes
+schtasks /query /fo list /v
+pause
+goto print
+
+:print
+echo ==============
+echo would you like to save the data to a text file?
+echo ==============
+echo - 
+echo 1) Yes	
+echo 2) No
+
+echo -
+set /p rk=Type option:
+if "%rk%"=="1" goto printyes
+if "%rk%"=="2" goto printno
+if "%rk%"=="no" goto printno
+if "%rk%"=="yes" goto printyes
+if "%rk%"=="y" goto printyes
+if '%rk%"=="n" goto printno
+echo Please Pick an option:
+goto print
+
+
+:printno
+exit
+
+:printyes
+echo Creating file to write to: startupdirectoryscan.txt
+null > startupdirectoryscan.txt
+echo Writing to file
+echo "%systemdrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
+dir /A HS "%systemdrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" >> startupdirectoryscan.txt
+
+echo "%systemdrive%\users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+dir /A HS "%systemdrive%\users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" >> startupdirectoryscan.txt
+
+echo "%systemDrive%\Documents and Settings\All Users\Start Menu\Programs\Startup"
+dir /A HS "%systemDrive%\Documents and Settings\All Users\Start Menu\Programs\Startup" >> startupdirectoryscan.txt
+
+echo "%SystemDrive%\wmiOWS\Start Menu\Programs\Startup"
+dir /A HS "%SystemDrive%\wmiOWS\Start Menu\Programs\Startup" >> startupdirectoryscan.txt
+
+echo "%SystemDrive%\WINNT\Profiles\All Users\Start Menu\Programs\Startup"
+dir /A HS "%SystemDrive%\WINNT\Profiles\All Users\Start Menu\Programs\Startup" >> startupdirectoryscan.txt
+
+
+echo "schtasks /query /fo list /v"
+schtasks /query /fo list /v >> startupdirectoryscan.txt
+
+echo complete!
+echo file can be found at:
+
+cd echo startupdirectoryscan.txt
