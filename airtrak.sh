@@ -11,10 +11,11 @@ fi
 
 while true; do
 
-    echo -e 'power on\nscan on' | bluetoothctl > /dev/null &
-    sleep 10
-    echo -e 'scan off\nquit' | bluetoothctl > /dev/null
-
+   bluetoothctl -- power on > /dev/null &
+   bluetoothctl -- discoverable yes > /dev/null & 
+   bluetoothctl -- scan on > /dev/null &   
+   bluetoothctl -- scan off > /dev/null &
+   bluetoothctl -- poweroff > /dev/null 
 
     if ls /var/lib/bluetooth/*/cache/*.cache > /dev/null 2>&1; then
         grep -oP 'Device \K\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}' /var/lib/bluetooth/*/cache/*.cache | sort -u | while read -r line; do
